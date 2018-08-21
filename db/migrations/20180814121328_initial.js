@@ -1,4 +1,3 @@
-
 exports.up = function(knex, Promise) {
   return Promise.all([
     knex.schema.createTable('users', table => {
@@ -30,7 +29,7 @@ exports.up = function(knex, Promise) {
       table.string('caption');
       table.timestamps(true, true);
     })
-  ])
+  ]);
 };
 
 exports.down = function(knex, Promise) {
@@ -38,5 +37,5 @@ exports.down = function(knex, Promise) {
     knex.schema.dropTable('saved_stories'),
     knex.schema.dropTable('locations'),
     knex.schema.dropTable('users')
-  ])
+  ]);
 };
