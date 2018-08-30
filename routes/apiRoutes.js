@@ -27,4 +27,23 @@ router.get('/users/:id', (request, response) => {
     .catch(error => response.status(500).json(error));
 });
 
+router.post('/users', (request, response) => {
+  const user = request.body;
+
+  for (const requiredParameter of ['email', 'firstName', 'lastName']) {
+    if (!user[requiredParameter]) {
+      return response
+        .status(422)
+        .json({
+          error: `Expected format: { email: <String>, firstName: <String>, lastName: <String>. Missing required property: ${requiredParameter}.`
+        });
+    }
+  }
+
+  return database('users')
+    .insert(user, 'id')
+    .then(result => response.status(201).json({ id: result[0] }))
+    .catch(error => response.status(500).json(error));
+});
+
 module.exports = { router, database };
