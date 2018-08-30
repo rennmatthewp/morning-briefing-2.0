@@ -50,14 +50,56 @@ describe('API Routes', () => {
     });
 
     it('should return an error with status 404 if the user is not found', done => {
-      chai.request(server)
-      .get('/api/v1/users/500')
-      .end((error, response) => {
-        response.should.have.status(404);
-        response.should.be.json;
-        response.body.should.have.property('error', 'Could not find user with id: 500.');
-        done();
-      })   
+      chai
+        .request(server)
+        .get('/api/v1/users/500')
+        .end((error, response) => {
+          response.should.have.status(404);
+          response.should.be.json;
+          response.body.should.have.property(
+            'error',
+            'Could not find user with id: 500.'
+          );
+          done();
+        });
+    });
+  });
+
+  describe('POST /api/v1/users', () => {
+    it('should add a new user to the database and return the new id', done => {
+      chai
+        .request(server)
+        .post('/api/v1/users')
+        .send({
+          email: 'joeyb@gmail.com',
+          firstName: 'Joey',
+          lastName: 'B'
+        })
+        .end((error, response) => {
+          response.should.have.status(201);
+          response.should.be.json;
+          response.body.should.have.property('id', 2);
+          done();
+        });
+    });
+
+    it('should return and error with status 422 if request is missing required param', done => {
+      chai
+        .request(server)
+        .post('/api/v1/users')
+        .send({
+          email: 'joeyb@gmail.com',
+          firstName: 'Joey'
+        })
+        .end((error, response) => {
+          response.should.have.status(422);
+          response.should.be.json;
+          response.body.should.have.property(
+            'error',
+            'Expected format: { email: <String>, firstName: <String>, lastName: <String>. Missing required property: lastName.'
+          );
+          done();
+        });
     });
   });
 });
