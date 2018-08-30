@@ -13,3 +13,5 @@ server.use('/api/v1', router);
 server.listen(server.get('port'), () => {
   console.log(`MB server listening at ${server.get('port')}`);
 });
+
+module.exports = server;
